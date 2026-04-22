@@ -1,0 +1,128 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Karla", sans-serif;
+    background-color: #F5F7FB;
+    margin: 0;
+    overflow-y: auto;
+}
+
+main {
+    background-image: url(./images/blobs.svg), url(./images/blobs2.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-size: 70px;
+    background-position: top right, bottom left;
+    display: grid;
+    min-height: 100vh;
+    align-items: flex-start; 
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 1em 1em;
+}
+
+main.home {
+    background-image: url(./images/blobs.svg), url(./images/blobs2.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: top right, bottom left;
+    height: 100vh;
+    background-size: 150px;
+    align-items: center;
+}
+
+.home-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    justify-items: center;
+}
+main h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #293264;
+}
+main p {
+    font-size: 1rem;
+    color: #293264;
+    margin-bottom: 2.5em;
+    max-width: 350px;
+}
+main button{
+    font-family: inherit;
+    width: 190px;
+    height: 52px;
+    background-color: #4D5B9E;
+    color: #F5F7FB;
+    border: none;
+    border-radius: 0.9em;
+}
+.quiz-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+.quiz-container:last-child .check-answers{
+    align-self: center;
+}
+
+.choices {
+    display: flex;
+    gap: 1em;
+}
+.choices .selected {
+    background-color: #D6DBF5;
+    border: none;
+}
+.choices .dimmed {
+    opacity: 0.5;
+}
+.choices .selected.wrong {
+    background-color: #F8BCBC;
+}
+.choices .correct {
+    background-color: #94D7A2;
+}
+.question {
+    font-size: 1rem;
+    margin-top: 0;
+    font-weight: 700;
+    color: #293264;
+}
+.quiz-btn{
+    font-size: 0.64rem;
+    height: 50px;
+    width: auto;
+    padding: 0.5em 1.5em;
+    color: #293264;
+    background-color: #F5F7FB;
+    border: 1px solid #4D5B9E;
+    border-radius: 0.77em;
+    display: grid;
+    place-content: center;
+}
+
+.quizzes {
+    padding: 0.6em 0;
+    border-bottom: 1px solid #DBDEF0;
+}
+
+.check-answers {
+    font-size: 0.64rem;
+    height: 35px;
+    width: 120px;
+    padding: 1em 2em;
+}
+
+.feedback-check{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 1em;
+}
+.feedback-check h3 {
+    color: #293264;
+    margin: 0;
+    text-align: center;
+}

@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "clsx": "2.1.1",
+    "nanoid": "5.1.9",
+    "react-loader-spinner": "8.0.2",
+    "html-entities": "2.6.0",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "*"
+  }
+}
