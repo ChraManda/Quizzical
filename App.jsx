@@ -1,137 +1,209 @@
 import { useState, useEffect } from 'react'
-import clsx from 'clsx'
 import { decode } from 'html-entities'
 import { nanoid } from 'nanoid'
-import { ThreeDots } from 'react-loader-spinner'
+import SetupScreen from './components/SetupScreen'
+import LoadingScreen from './components/LoadingScreen'
+import QuizScreen from './components/QuizScreen'
+import ResultsScreen from './components/ResultsScreen'
+
 export default function App() {
-    
-    const [page, setPage] = useState('home')
-    const [selectedAnswer, setSelectedAnswer] = useState({})
-    const [quiz, setQuiz] = useState([])
-    const [results, setResults] = useState({})
-    const [isQuizOver, setIsQuizOver] = useState(false)
-    const [loading, setLoading] = useState(true)
-    
-    useEffect( () => {
-        getQuestions()
-    }, [])
-    
-    const userScore = Object.values(results).filter( score => score === true).length
-    
-    function newQuiz () {
-        page === 'home'? setPage('quiz') : page
-        setSelectedAnswer({})
-        setQuiz([])
-        setResults({})
-        getQuestions()
-        setIsQuizOver(false)
-    }
-    function checkAnswers() {
-        const result = Object.fromEntries(Object.entries(selectedAnswer).map(([id, answerIndex]) => {
-            const question = quiz.find(q => q.id === id)
-            const isCorrect = question.answers[answerIndex] === question.correctAns ? true : false
-            return [id, isCorrect]
-        }))
-        setIsQuizOver(prev => prev === false? true: prev)
-        setResults(result)
-    }
-    
-   async function getQuestions() {
-        setLoading(true)
-        const response = await fetch('https://opentdb.com/api.php?amount=5&category=12&difficulty=medium&type=multiple')
-        const data  = await response.json()
-        if (!data.results) return
-        const quizzes = data.results.map( quiz => {
-            let allAnswers = [...quiz.incorrect_answers, quiz.correct_answer].map(a => decode(a))
-            allAnswers.sort( () => Math.random() - 0.5)
-            return({
-                id: nanoid(), 
-                question: decode(quiz.question),
-                answers: allAnswers,
-                correctAns: decode(quiz.correct_answer)
-            })
-        })
-        setQuiz(quizzes)
-        setLoading(false)
-    }
-    
-    
- //Generating choices Element from API
-    const choicesEl = quiz.map((question) => {
-        const choices = question.answers.map((answer, index) => {
-            const isSelected = selectedAnswer[question.id] === index
-            const isCorrect = results[question.id] === true
-            const isWrong = results[question.id] === false
-            const correctIndex = question.answers.indexOf(question.correctAns)
-            
-            const btnClasses = clsx('quiz-btn', {
-                'selected': isSelected,
-                'correct': isQuizOver && (isCorrect && isSelected || index === correctIndex),
-                'wrong': isQuizOver && isWrong && isSelected,
-                'dimmed': isQuizOver && index !==correctIndex && (!isSelected || isWrong)
-            })
-                
-            return (
-                <button
-                    key={index}
-                    className={btnClasses}
-                    onClick={() => setSelectedAnswer(prev => ({ ...prev, [question.id]: index }))}
-                    disabled={isQuizOver && selectedAnswer[question.id] !== index}
-                >
-                    {answer}
-                </button>
-        )})
-        return (
-            <div key={question.id} className="quizzes">
-                <h3 className='question'>{question.question}</h3>
-                <div className='choices'>
-                    {choices}
-                </div>
-            </div>
-        )
+    const [screen, setScreen] = useState('setup')
+    const [quizConfig, setQuizConfig] = useState({
+        category: 'any',
+        difficulty: 'any',
+        amount: 5
     })
-    
+    const [questions, setQuestions] = useState([])
+    const [userAnswers, setUserAnswers] = useState({})
+    const [quizError, setQuizError] = useState(null)
+    const [noticeMessage, setNoticeMessage] = useState(null)
+    const [sessionToken, setSessionToken] = useState(() => {
+        return sessionStorage.getItem('quizzical_token') || ''
+    })
+
+    const fetchSessionToken = async () => {
+        try {
+            const res = await fetch('https://opentdb.com/api_token.php?command=request')
+            const data = await res.json()
+            if (data.response_code === 0 && data.token) {
+                sessionStorage.setItem('quizzical_token', data.token)
+                setSessionToken(data.token)
+                return data.token
+            }
+        } catch (err) {
+            console.error('Error fetching session token', err)
+        }
+        return ''
+    }
+
+    useEffect(() => {
+        if (!sessionToken) {
+            fetchSessionToken()
+        }
+    }, [])
+
+    const resetTokenHistory = async (token) => {
+        try {
+            const res = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`)
+            const data = await res.json()
+            return data.response_code === 0
+        } catch (err) {
+            console.error('Error resetting token history', err)
+            return false
+        }
+    }
+
+    const shuffleArray = (array) => {
+        const shuffled = [...array]
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        }
+        return shuffled
+    }
+
+    const fetchQuizQuestions = async (config, isRetry = false) => {
+        setQuizConfig(config)
+        setQuizError(null)
+        setScreen('loading')
+
+        let currentToken = sessionToken || sessionStorage.getItem('quizzical_token')
+        if (!currentToken) {
+            currentToken = await fetchSessionToken()
+        }
+
+        let url = `https://opentdb.com/api.php?amount=${config.amount}&type=multiple`
+        if (config.category && config.category !== 'any') {
+            url += `&category=${config.category}`
+        }
+        if (config.difficulty && config.difficulty !== 'any') {
+            url += `&difficulty=${config.difficulty}`
+        }
+        if (currentToken) {
+            url += `&token=${currentToken}`
+        }
+
+        try {
+            const res = await fetch(url)
+            if (!res.ok) throw new Error('Network error during fetch')
+            const data = await res.json()
+
+            if (data.response_code === 0) {
+                const formattedQuestions = data.results.map((q) => {
+                    const decodedCorrect = decode(q.correct_answer)
+                    const decodedIncorrect = q.incorrect_answers.map(a => decode(a))
+                    const allAnswers = shuffleArray([...decodedIncorrect, decodedCorrect])
+
+                    return {
+                        id: nanoid(),
+                        question: decode(q.question),
+                        category: decode(q.category),
+                        answers: allAnswers,
+                        correctAnswer: decodedCorrect
+                    }
+                })
+
+                setQuestions(formattedQuestions)
+                setUserAnswers({})
+                setNoticeMessage(null)
+                setScreen('quiz')
+            } else if (data.response_code === 1) {
+                setQuizError('Not enough questions available for this combination, try a different difficulty or category')
+                setNoticeMessage(null)
+                setScreen('setup')
+            } else if (data.response_code === 3) {
+                if (!isRetry) {
+                    sessionStorage.removeItem('quizzical_token')
+                    setSessionToken('')
+                    const newToken = await fetchSessionToken()
+                    if (newToken) {
+                        return fetchQuizQuestions(config, true)
+                    }
+                }
+                setQuizError('Session expired. Please try again.')
+                setNoticeMessage(null)
+                setScreen('setup')
+            } else if (data.response_code === 4) {
+                if (!isRetry && currentToken) {
+                    setNoticeMessage('Refreshing question pool...')
+                    await resetTokenHistory(currentToken)
+                    return fetchQuizQuestions(config, true)
+                }
+                setQuizError('All questions in this category have been viewed. Question pool reset, please try again.')
+                setNoticeMessage(null)
+                setScreen('setup')
+            } else if (data.response_code === 5) {
+                if (!isRetry) {
+                    setNoticeMessage('Rate limit reached. Waiting a moment...')
+                    await new Promise(r => setTimeout(r, 5000))
+                    return fetchQuizQuestions(config, true)
+                }
+                setQuizError('Rate limit reached. Please wait a few seconds and try again.')
+                setNoticeMessage(null)
+                setScreen('setup')
+            } else {
+                setQuizError(`API returned response code ${data.response_code}. Please try different settings.`)
+                setNoticeMessage(null)
+                setScreen('setup')
+            }
+        } catch (err) {
+            setQuizError('Network failure. Please check your connection and click Start Quiz to try again.')
+            setNoticeMessage(null)
+            setScreen('setup')
+        }
+    }
+
+    const handleQuizSubmit = (answers) => {
+        setUserAnswers(answers)
+        setScreen('results')
+    }
+
+    const handlePlayAgain = () => {
+        fetchQuizQuestions(quizConfig)
+    }
+
+    const handleChangeCategory = () => {
+        setScreen('setup')
+    }
+
+    const handleHome = () => {
+        setQuestions([])
+        setUserAnswers({})
+        setQuizError(null)
+        setNoticeMessage(null)
+        setScreen('setup')
+    }
+
     return (
-        <main className={page === 'home' ? 'home' : ''}>
-            {page === 'home' && (
-                <><div className='home-container'>
-                    <h1>Quizzical</h1>
-                    <p>Test your music knowledge with this Quizzes</p>
-                    <button onClick={newQuiz}>Quiz</button>
-                </div>
-                </>
+        <main>
+            {screen === 'setup' && (
+                <SetupScreen
+                    onStartQuiz={fetchQuizQuestions}
+                    initialConfig={quizConfig}
+                    quizError={quizError}
+                    onClearError={() => setQuizError(null)}
+                />
             )}
-            {page === 'quiz' && (
-                <>
-                    <div className='quiz-container'>
-                        {loading? <ThreeDots
-                        height="80"
-                        width="80"
-                        radius="9"
-                        color="#4D5B9E"
-                        ariaLabel="three-dots-loading"
-                        wrapperStyle={{ margin: '20px' }}
-                        wrapperClass="custom-loader"
-                        visible={true}
-                        /> : (quiz.length > 0 && choicesEl)}
-                        
-                        <div className="feedback-check">
-                            <div>
-                                {isQuizOver && <h3>You Scored {userScore}/{quiz.length}</h3>}
-                            </div>
-                            <div>
-                                {!isQuizOver && quiz.length !== 0 && Object.keys(selectedAnswer).length === quiz.length &&
-                                    <button className='check-answers' onClick={checkAnswers}>
-                                        Check answers
-                                    </button>}
-                                {isQuizOver &&
-                                    <button className='check-answers' onClick={newQuiz}>
-                                        New Quiz
-                                    </button>}
-                            </div>
-                        </div>
-                    </div>
-                </>
+
+            {screen === 'loading' && (
+                <LoadingScreen noticeMessage={noticeMessage} />
+            )}
+
+            {screen === 'quiz' && (
+                <QuizScreen
+                    questions={questions}
+                    onSubmitQuiz={handleQuizSubmit}
+                />
+            )}
+
+            {screen === 'results' && (
+                <ResultsScreen
+                    questions={questions}
+                    userAnswers={userAnswers}
+                    onPlayAgain={handlePlayAgain}
+                    onChangeCategory={handleChangeCategory}
+                    onHome={handleHome}
+                />
             )}
         </main>
     )

@@ -1,0 +1,341 @@
+.container {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.scoreCard {
+    width: 100%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1.5rem;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+.ringWrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ringSvg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.ringBg {
+    fill: none;
+    stroke: var(--bg-dark);
+    stroke-width: 10;
+}
+
+.ringFill {
+    fill: none;
+    stroke: var(--accent-teal);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.ringTextContent {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.percentageText {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.scoreRatioText {
+    font-size: 0.85rem;
+    color: var(--accent-teal);
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+.gradeHeadline {
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* Actions at the top immediately visible */
+.actionsRow {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.playAgainBtn {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #0077B6 100%);
+    color: #0B132B;
+    border: none;
+    border-radius: 0.85rem;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px var(--accent-teal-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1 1 180px;
+}
+
+.playAgainBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-teal-glow);
+}
+
+.changeCategoryBtn {
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 0.85rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    flex: 1 1 160px;
+}
+
+.changeCategoryBtn:hover {
+    border-color: var(--accent-teal);
+    color: var(--accent-teal-hover);
+    background-color: var(--bg-dark);
+}
+
+.homeBtn {
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 0.85rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    flex: 0 0 auto;
+}
+
+.homeBtn:hover {
+    border-color: var(--text-main);
+    color: var(--text-main);
+    background-color: var(--bg-dark);
+}
+
+/* Collapsible Review Toggle */
+.reviewSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.toggleReviewBtn {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.85rem;
+    color: var(--text-main);
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.toggleReviewBtn:hover {
+    border-color: var(--accent-teal);
+    background-color: var(--card-hover);
+}
+
+.filterRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.filterChip {
+    min-height: 36px;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-dark);
+    color: var(--text-muted);
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.filterChip:hover {
+    border-color: var(--accent-teal);
+    color: var(--text-main);
+}
+
+.filterChipActive {
+    background-color: var(--accent-teal);
+    color: #0B132B;
+    border-color: var(--accent-teal);
+    font-weight: 700;
+}
+
+.questionReviewCard {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.reviewHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.reviewQuestionText {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.statusBadge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 2rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.statusCorrect {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: var(--color-success);
+}
+
+.statusWrong {
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error);
+}
+
+.reviewAnswers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.answerRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.answerRowUserCorrect {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: #DCFCE7;
+    font-weight: 600;
+}
+
+.answerRowUserWrong {
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: #FEE2E2;
+    font-weight: 500;
+}
+
+.answerRowCorrectTarget {
+    background-color: rgba(0, 180, 216, 0.12);
+    border: 1px solid var(--accent-teal);
+    color: #E0F2FE;
+    font-weight: 600;
+}
+
+.answerLabel {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.bottomPlayAgainRow {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+
+.compactPlayAgainBtn {
+    min-height: 44px;
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #0077B6 100%);
+    color: #0B132B;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.compactPlayAgainBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px var(--accent-teal-glow);
+}
+
+@media (max-width: 767px) {
+    .actionsRow {
+        flex-direction: column;
+    }
+    .playAgainBtn, .changeCategoryBtn, .homeBtn {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}

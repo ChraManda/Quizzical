@@ -1,0 +1,273 @@
+.container {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    text-align: center;
+}
+
+.title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #F8FAFC 0%, var(--accent-teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    color: var(--text-muted);
+}
+
+.form {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1.25rem;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.label {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* Custom Select Dropdown Styling */
+.customSelectWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.customSelectTrigger {
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.customSelectTrigger:focus {
+    outline: none;
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 3px var(--accent-teal-glow);
+}
+
+.customSelectTrigger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.customSelectText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    flex: 1;
+}
+
+.customSelectArrow {
+    color: var(--accent-teal);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.customOptionsPanel {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 50vh;
+    overflow-y: auto;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 0.35rem;
+    box-sizing: border-box;
+}
+
+.customOption {
+    width: 100%;
+    max-width: 100%;
+    min-height: 40px;
+    padding: 0.6rem 0.85rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.customOption:hover {
+    background-color: var(--card-hover);
+    color: var(--accent-teal-hover);
+}
+
+.customOptionSelected {
+    background-color: rgba(0, 180, 216, 0.18);
+    color: var(--accent-teal);
+    font-weight: 700;
+}
+
+.optionsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.segmentedBtn {
+    min-height: 44px;
+    padding: 0.6rem 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-dark);
+    color: var(--text-muted);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.segmentedBtn:hover {
+    border-color: var(--accent-teal);
+    color: var(--text-main);
+}
+
+.segmentedBtnActive {
+    background-color: var(--accent-teal);
+    color: #0B132B;
+    border-color: var(--accent-teal);
+    font-weight: 700;
+    box-shadow: 0 4px 12px var(--accent-teal-glow);
+}
+
+.submitBtn {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #0077B6 100%);
+    color: #0B132B;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 0.85rem;
+    transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px var(--accent-teal-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+}
+
+.submitBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-teal-glow);
+}
+
+.submitBtn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.errorMessage {
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: #FCA5A5;
+    padding: 0.85rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.retryBtn {
+    min-height: 44px;
+    padding: 0.5rem 1.25rem;
+    background-color: var(--color-error-border);
+    color: var(--text-main);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.retryBtn:hover {
+    background-color: #B91C1C;
+}
+
+/* Responsiveness */
+@media (max-width: 767px) {
+    .optionsGrid {
+        grid-template-columns: 1fr;
+    }
+}
