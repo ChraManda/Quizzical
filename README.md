@@ -4,7 +4,7 @@ A quiz app I built with React 19 and Vite. It pulls questions from the [Open Tri
 
 Live demo: [https://quizzical1947.netlify.app/](https://quizzical1947.netlify.app/)
 
-![Quizzical Preview](./images/quizzical-preview.png)
+![Quizzical Preview](./images/quizzical.png)
 
 ## How it works
 
