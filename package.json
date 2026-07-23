@@ -1,6 +1,10 @@
 {
   "name": "chra-manda",
+  "private": true,
   "description": "A Music Quiz app",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -13,10 +17,10 @@
     "clsx": "2.1.1",
     "nanoid": "5.1.9",
     "react-loader-spinner": "8.0.2",
-    "html-entities": "2.6.0",
-    "vite": "latest"
+    "html-entities": "2.6.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "*"
+    "@vitejs/plugin-react": "6.0.1",
+    "vite": "8.0.10"
   }
 }
